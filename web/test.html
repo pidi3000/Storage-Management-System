@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Storage management</title>
+
+    <link rel="stylesheet" href="design.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script type="text/javascript" src="/eel.js"></script>
+</head>
+
+<body class="dark">
+    Hello World!
+
+    <div class="pageContentBox">
+        <div id="search-Menu" class="search-Menu-Box">
+
+            <div class="part-Filter-Box">
+                <div class="part-Filter-Title"><b>Filter</b></div>
+
+                <div class="part-Filter-Sub-Box part-Filter-Tag-Box">
+                    <div class="part-Filter-Sub-Title"><b>Tags</b></div>
+
+                    <input id="tagSearchInput" type="text" placeholder="Search tag" class="part-Filter-Input"
+                        oninput="searchTag(this.value)">
+
+                    <div id="part-Filter-Tags-List" class="part-Filter-List"> </div>
+                </div>
+
+                <div class="part-Filter-Sub-Box part-Filter-Location-Box">
+                    <div class="part-Filter-Sub-Title"><b>Location</b></div>
+
+                    <input id="locationSearchInput" type="text" placeholder="Search location" class="part-Filter-Input"
+                        oninput="searchLocation(this.value)">
+
+                    <div id="part-Filter-Locations-List" class="part-Filter-List"> </div>
+                </div>
+
+                <template id="part-Filter-Entry-Template">
+                    <div id="part-Filter-Entry" class="part-Filter-Entry"> </div>
+                </template>
+            </div>
+
+            <div class="part-Search-Box">
+                <input id="partSearchInput" type="text" placeholder="Search" class="part-Search-Input"
+                    oninput="searchPart()">
+
+                <div id="search-Result-List" class="search-Result-List"> </div>
+                <template id="search-Result-Part-Template">
+                    <div id="part-ID" class="search-Result-Part-Box" onclick="showPartInfo(this.id)">
+                        <div>
+                            <img id="search-Result-Part-Image" class="search-Result-Part-Image"
+                                src="/data/attachments/default-image-620x600.jpg" alt="part image">
+                        </div>
+
+                        <div class="search-Result-Part-Data-Box">
+                            <b id="search-Result-Part-Name">Part Name</b>
+                            <br>
+                            <br>
+                            <span id="search-Result-Part-Quantity" class="search-Result-Part-Quantity">2000</span>
+                            <span id="search-Result-Part-Description" class="search-Result-Part-Description"></span>
+                        </div>
+                    </div>
+                </template>
+
+            </div>
+
+            <div class="part-Info-Box">
+                <div>
+                    <img id="part-Info-Image" class="part-Info-Image" src="/data/attachments/default-image-620x600.jpg"
+                        alt="part image">
+                </div>
+
+                <div class="part-Info-Name-Box">
+                    <b id="part-Info-Name"></b>
+                </div>
+
+                <div id="part-Info-Location-List" class="part-Info-Sub-Box part-Info-Location-Box"> </div>
+                <template id="part-Info-Location-Entry-Template">
+                    <div id="part-Info-Location-Entry" class="part-Info-Location-Entry">
+                        <span id="part-Info-Location-Entry-Name" class="part-Info-Location-Entry-Name"></span>
+                        <span id="part-Info-Location-Entry-Quantity" class="part-Info-Location-Entry-Quantity"></span>
+                    </div>
+                </template>
+
+
+                <div id="part-Info-Tag-List" class="part-Info-Sub-Box part-Info-Tags-Box"> </div>
+
+                <div id="part-Info-Description" class="part-Info-Description-Box"> </div>
+
+                <div id="part-Info-attachment-List" class="part-Info-attachment-Box"> </div>
+
+            </div>
+        </div>
+
+    </div>
+</body>
+
+<script>
+    eel.expose(my_function);
+    function my_function(a, b) {
+        console.log(a + b);
+    }
+
+
+    eel.expose(getData);
+    function getData() {
+        return "test message";
+    }
+</script>
+
+<script>
+    // Search menu script
+    searchPart("");
+    searchTag("");
+    searchLocation("");
+
+
+    // Search Filter stuff
+    // ------------------------------------------------------------------------------------------------------------------------
+    var searchFilter = { "Tags": [], "Locations": [] };
+
+    function handleFilterSearchResult(filterType, searchResult) {
+        var filterList = document.getElementById("part-Filter-" + filterType + "-List");
+        var template = document.getElementById("part-Filter-Entry-Template");
+
+        filterList.innerHTML = "";
+
+        searchResult.forEach(part => {
+            var templateClone = template.content.cloneNode(true);
+
+            templateClone.getElementById("part-Filter-Entry").innerText = part["Name"];
+            templateClone.getElementById("part-Filter-Entry").title = part["Description"];
+            templateClone.getElementById("part-Filter-Entry").setAttribute("onclick", "toggleFilter('" + filterType + "', this)");
+            templateClone.getElementById("part-Filter-Entry").id = part["ID"];
+
+            filterList.appendChild(templateClone);
+        });
+    }
+
+    async function searchTag(searchText) {
+        var searchResult = JSON.parse(await eel.searchTag(searchText)());
+        handleFilterSearchResult("Tags", searchResult);
+    }
+
+    async function searchLocation(searchText) {
+        var searchResult = JSON.parse(await eel.searchLocation(searchText)());
+        handleFilterSearchResult("Locations", searchResult);
+    }
+
+    function toggleFilter(filterType, tag) {
+        if (tag.classList.contains("part-Filter-Entry-Selected")) {
+            tag.classList.remove("part-Filter-Entry-Selected");
+
+            // Remove tag from filter array
+            const index = searchFilter[filterType].indexOf(tag.id);
+            if (index > -1) {
+                searchFilter[filterType].splice(index, 1);
+            }
+        } else {
+            tag.classList.add("part-Filter-Entry-Selected");
+            searchFilter[filterType].push(tag.id);
+        }
+
+        searchPart();
+    }
+
+
+    // Search stuff
+    // ------------------------------------------------------------------------------------------------------------------------
+    async function searchPart() {
+        var searchText = document.getElementById("partSearchInput").value;
+        var searchResult = JSON.parse(await eel.searchPart(searchText, JSON.stringify(searchFilter))());
+
+        console.log(searchResult);
+
+        var searchResultList = document.getElementById("search-Result-List");
+        var template = document.getElementById("search-Result-Part-Template");
+
+        searchResultList.innerHTML = "";
+
+        searchResult.forEach(part => {
+            var templateClone = template.content.cloneNode(true);
+
+            templateClone.getElementById("part-ID").id = part["ID"];
+
+            if (part["Image"] != "") {
+                templateClone.getElementById("search-Result-Part-Image").src = part["Image"];
+            } else {
+                templateClone.getElementById("search-Result-Part-Image").src = "/data/attachments/default-image-620x600.jpg";
+            }
+
+            templateClone.getElementById("search-Result-Part-Name").innerText = part["Name"];
+            templateClone.getElementById("search-Result-Part-Quantity").innerText = formatQuantityString(part["Total-Quantity"]);
+            templateClone.getElementById("search-Result-Part-Quantity").title = part["Total-Quantity"];
+            templateClone.getElementById("search-Result-Part-Description").innerText = part["Description"];
+            //templateClone.getElementById("search-Result-Part-Description").innerText = part["similarityRatio"];
+
+            searchResultList.appendChild(templateClone);
+        });
+    }
+
+    async function showPartInfo(partID) {
+        var partData = JSON.parse(await eel.getPartData(partID)());
+
+        if (partData == "none") {
+            console.log("invalid part ID")
+            return;
+        }
+
+
+        if (partData["Image"] != "") {
+            document.getElementById("part-Info-Image").src = partData["Image"];
+        } else {
+            document.getElementById("part-Info-Image").src = "/data/attachments/default-image-620x600.jpg";
+        }
+
+        document.getElementById("part-Info-Name").innerText = partData["Name"];
+        document.getElementById("part-Info-Description").innerText = partData["Description"];
+
+
+
+        // Adding all Locations
+        var locations = partData["Locations"];
+        var locationList = document.getElementById("part-Info-Location-List");
+        var template = document.getElementById("part-Info-Location-Entry-Template");
+
+        locationList.innerHTML = "";
+
+        locations.forEach(locationInfo => {
+            var templateClone = template.content.cloneNode(true);
+
+            templateClone.getElementById("part-Info-Location-Entry").id = locationInfo["ID"];
+
+            templateClone.getElementById("part-Info-Location-Entry-Name").innerText = locationInfo["Name"];
+            templateClone.getElementById("part-Info-Location-Entry-Name").title = locationInfo["Name"];
+
+            templateClone.getElementById("part-Info-Location-Entry-Quantity").innerText = formatQuantityString(locationInfo["Quantity"]);
+            templateClone.getElementById("part-Info-Location-Entry-Quantity").title = locationInfo["Quantity"];
+
+            locationList.appendChild(templateClone);
+        });
+
+
+
+        // Adding all Tags
+        var tags = partData["Tags"];
+        var tagList = document.getElementById("part-Info-Tag-List");
+
+        tagList.innerHTML = "";
+
+        tags.forEach(tagName => {
+            //var tagDiv = document.createElement("div");
+            var tagNode = document.createElement("div");
+
+            tagNode.setAttribute("class", "part-Info-Tag-Entry");
+            tagNode.innerText = tagName;
+
+            //tagDiv.appendChild(tagNode);
+            tagList.appendChild(tagNode);
+        });
+
+
+
+        // Adding all Attachments
+        var attachments = partData["Attachments"];
+        var attachmentList = document.getElementById("part-Info-attachment-List");
+
+        attachmentList.innerHTML = "";
+
+        attachments.forEach(function (attachmentSource, idx, array) {
+            //attachmentSource => 
+
+            var attachmentImg = document.createElement("img");
+
+            attachmentImg.setAttribute("class", "part-Info-attachment-Entry");
+
+            if (idx !== array.length - 1) {
+                attachmentImg.classList.add("bottom-Border");
+            }
+
+            attachmentImg.src = attachmentSource;
+
+            attachmentList.appendChild(attachmentImg);
+        });
+    }
+
+    function formatQuantityString(quantity) {
+        var formatedQuantity = quantity;
+
+        if (formatedQuantity > 1000) {
+            formatedQuantity = ((formatedQuantity / 1000).toString()).split(".");
+            formatedQuantity = formatedQuantity[0] + "." + formatedQuantity[1].substr(0, 1) + "K";
+        }
+        return formatedQuantity
+    }
+</script>
+
+</html>

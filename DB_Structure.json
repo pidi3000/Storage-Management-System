@@ -1,0 +1,207 @@
+{
+    "Parts": {
+        "Part_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "PRIMARY KEY": true
+        },
+        "Part_Name": {
+            "Type": "TEXT",
+            "NOT NULL": true
+        },
+        "Part_Description": {
+            "Type": "TEXT"
+        },
+        "Part_Image":{
+            "Type": "TEXT",
+            "NOT NULL": true
+        }
+    },
+    "Storage_Location": {
+        "Location_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "PRIMARY KEY": true
+        },
+        "Location_Name": {
+            "Type": "TEXT",
+            "NOT NULL": true
+        },
+        "Location_Description": {
+            "Type": "TEXT"
+        },
+        "Space_Left":{
+            "Type": "TEXT"
+        }
+    },
+    "Part_History": {
+        "Event_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "PRIMARY KEY": true
+        },
+        "PS_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "FOREIGN KEY": {
+                "Reference Table": "Parts_In_Storage",
+                "Reference Column": "PS_ID"
+            }
+        },
+        "Date": {
+            "Type": "TIMESTAMP",
+            "NOT NULL": true
+        },
+        "Quantity": {
+            "Type": "INTEGER",
+            "NOT NULL": true
+        },
+        "Note": {
+            "Type": "TEXT"
+        }
+    },
+    "Tags": {
+        "Tag_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "PRIMARY KEY": true
+        },
+        "Tag_Name": {
+            "Type": "TEXT",
+            "NOT NULL": true
+        },
+        "Tag_Description": {
+            "Type": "TEXT"
+        }
+    },
+    "Attachments": {
+        "Attachment_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "PRIMARY KEY": true
+        },
+        "File_Type": {
+            "Type": "TEXT",
+            "NOT NULL": true
+        },
+        "File_Directory": {
+            "Type": "TEXT",
+            "NOT NULL": true
+        },
+        "File_Name": {
+            "Type": "TEXT",
+            "NOT NULL": true
+        }
+    },
+    "Parts_In_Storage": {
+        "PS_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "PRIMARY KEY": true
+        },
+        "Part_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "FOREIGN KEY": {
+                "Reference Table": "Parts",
+                "Reference Column": "Part_ID"
+            }
+        },
+        "Location_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "FOREIGN KEY": {
+                "Reference Table": "Storage_Location",
+                "Reference Column": "Location_ID"
+            }
+        },
+        "Quantity": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "DEFAULT": 0
+        }
+    },
+    "Parts_Tagging": {
+        "Part_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "PRIMARY KEY": true,
+            "FOREIGN KEY": {
+                "Reference Table": "Parts",
+                "Reference Column": "Part_ID"
+            }
+        },
+        "Tag_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "PRIMARY KEY": true,
+            "FOREIGN KEY": {
+                "Reference Table": "Tags",
+                "Reference Column": "Tag_ID"
+            }
+        }
+    },
+    "Parts_Attachment": {
+        "Part_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "PRIMARY KEY": true,
+            "FOREIGN KEY": {
+                "Reference Table": "Parts",
+                "Reference Column": "Part_ID"
+            }
+        },
+        "Attachment_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "PRIMARY KEY": true,
+            "FOREIGN KEY": {
+                "Reference Table": "Attachments",
+                "Reference Column": "Attachment_ID"
+            }
+        },
+        "Note": {
+            "Type": "TEXT"
+        }
+    },
+    "Storage_Attachment": {
+        "Location_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "PRIMARY KEY": true,
+            "FOREIGN KEY": {
+                "Reference Table": "Storage_Location",
+                "Reference Column": "Location_ID"
+            }
+        },
+        "Attachment_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "PRIMARY KEY": true,
+            "FOREIGN KEY": {
+                "Reference Table": "Attachments",
+                "Reference Column": "Attachment_ID"
+            }
+        }
+    },
+    "PS_Attachment": {
+        "PS_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "PRIMARY KEY": true,
+            "FOREIGN KEY": {
+                "Reference Table": "Parts_In_Storage",
+                "Reference Column": "PS_ID"
+            }
+        },
+        "Attachment_ID": {
+            "Type": "INTEGER",
+            "NOT NULL": true,
+            "PRIMARY KEY": true,
+            "FOREIGN KEY": {
+                "Reference Table": "Attachments",
+                "Reference Column": "Attachment_ID"
+            }
+        }
+    }
+}

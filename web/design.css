@@ -1,0 +1,463 @@
+/* Themes */
+:root {
+  --gray0  : #ffffff;
+  --gray1  : #ebebeb;
+  --gray2  : #b3b3b3;
+  --gray3  : #838383;
+  --gray4  : #4a4a4a;
+  --gray5  : #333333;
+  --gray5-5: #282828;
+  --gray6  : #141414;
+
+  --blue  : #0084a5;
+  --purple: #a82dd1;
+  --yellow: #fff565;
+  --red   : #ff0000;
+  
+  --green   : #00d32e;
+  --green1   : #007c1b;
+
+  --bg-nav-bar: #222222;
+  --bg-color  : var(--gray6);
+
+  --header-height: 56px;
+}
+
+.light {
+  --bg-color         : var(--gray0);
+  --bg-color-brighter: var(--gray1);
+  --bg-color-darker  : var(--gray2);
+
+  --text      : var(--gray6);
+  --text-hover: var(--gray6);
+
+  --border-color: var(--red);
+  --box-shadow  : var(--gray3);
+
+  --bg-header-menu: var(--gray0);
+
+  --button      : var(--gray1);
+  --button-hover: var(--gray2);
+}
+
+
+.dark {
+  --bg-color         : var(--gray5-5);
+  --bg-color-brighter: var(--gray4);
+  --bg-color-darker  : var(--gray5);
+
+  --text      : var(--gray1);
+  --text-hover: var(--gray6);
+
+  --border-color: var(--purple);
+  --box-shadow  : var(--gray5);
+
+  --bg-header-menu: var(--gray4);
+
+  --button      : var(--gray4);
+  --button-hover: var(--gray3);
+}
+
+/* ------------------------------------------ */
+body {
+  margin : 0;
+  padding: 0;
+
+  font-family: 'Montserrat', sans-serif;
+  font-size  : 20px;
+
+  color     : var(--text);
+  background: var(--bg-color);
+  transition: background 250ms ease-in-out, color 500ms ease-in-out;
+}
+
+
+.pageContentBox {
+  position: absolute;
+  margin  : 0;
+  padding : 5px;
+
+  top: var(--header-height);
+
+  width : calc(100% - 10px - 4px);
+  height: calc(100% - var(--header-height) - 10px - 4px);
+
+  border         : 2px solid var(--border-color);
+  border-collapse: collapse;
+}
+
+/* Search Menu */
+/* ------------------------------------------ */
+.search-Menu-Box {
+  width : 100%;
+  height: 100%;
+
+  border-collapse: collapse;
+}
+
+/* ------------------------------------------------------------------------------------ */
+/* Part Filter column */
+/* ------------------------------------------------------------------------------------ */
+.part-Filter-Box {
+  position: absolute;
+  padding : 5px;
+
+  left: 0px;
+  top : 0px;
+
+  width : calc(20% - 10px - 4px);
+  height: calc(100% - 10px - 4px);
+
+  border         : 2px solid var(--border-color);
+  border-collapse: collapse;
+}
+
+.part-Filter-Title{
+  padding-bottom: 10px;
+
+  text-align: center;
+  font-size: 26px;
+
+  width: 100%;
+  height: 32px;
+
+}
+
+/* Part Filter Tags */
+/* ------------------------------------------ */
+.part-Filter-Sub-Box{
+  padding: 5px;
+
+  width: calc(100% - 10px);
+  height: calc((100% - 72px) / 2);
+}
+
+.part-Filter-Sub-Title{
+  padding-bottom: 10px;
+
+  font-size: 20px;
+
+  width: 100%;
+  height: 24px;
+}
+
+.part-Filter-Input{
+  margin-bottom: 10px;
+
+  width : calc(100% - 5px);
+  height: 20px;
+
+  font-size: 20px;
+}
+
+.part-Filter-List{
+  padding: 5px;
+
+  width: calc(100% - 10px);
+  height: calc(100% - 80px);
+
+  background-color: var(--box-shadow);
+
+  overflow: auto;
+  
+  border         : 2px solid var(--border-color);
+}
+
+.part-Filter-Entry{
+  margin: 4px 2px;
+  padding: 10px 20px;
+
+  --box-height: 16px;
+  height      : var(--box-height);
+
+  text-align : center;
+  text-decoration: none;
+  font-size  : 16px;
+
+  border-radius: 16px;
+
+  background-color: var(--button);
+  border: none;
+  display: inline-block;
+}
+
+.part-Filter-Entry:hover{
+  cursor: pointer;
+
+  background-color: var(--button-hover);
+
+}
+
+.part-Filter-Entry-Selected{
+  color: var(--text-hover);
+  background-color: var(--green);
+}
+
+
+.part-Filter-Entry-Selected:hover{
+  cursor: pointer;
+
+  background-color: var(--green1);
+}
+
+/* ------------------------------------------------------------------------------------ */
+/* Part Search column */
+/* ------------------------------------------------------------------------------------ */
+.part-Search-Box {
+  position: absolute;
+  padding : 5px;
+
+  left: calc(20%);
+  top : 0px;
+
+  width : calc(40% - 10px - 4px);
+  height: calc(100% - 10px - 4px);
+
+  border         : 2px solid var(--border-color);
+  border-collapse: collapse;
+}
+
+.part-Search-Input {
+  margin-bottom: 10px;
+
+  width : calc(100% - 10px);
+  height: 20px;
+
+  font-size: 20px;
+}
+
+.search-Result-List {
+  width : calc(100%);
+  height: calc(100% - 40px);
+
+  overflow-x: auto;
+  overflow-y: scroll;
+}
+
+.search-Result-Part-Box {
+  position: relative;
+
+  margin-top: 10px;
+  padding   : 10px;
+
+  width : calc(100% - 30px);
+  height: 100px;
+
+  background-color: var(--button);
+}
+
+.search-Result-Part-Box:hover {
+  opacity: 0.5;
+}
+
+.search-Result-Part-Image {
+  position       : relative;
+  object-position: center;
+
+  width : 100px;
+  height: 100px;
+
+  max-width : 100%;
+  max-height: 100%;
+}
+
+.search-Result-Part-Data-Box {
+  position: absolute;
+  left    : 110px;
+  top     : 10px;
+
+  padding-left: 10px;
+
+  width : calc(100% - 120px);
+  height: 100px;
+}
+
+.search-Result-Part-Description {
+  position: absolute;
+  left    : 70px;
+  top     : 25px;
+
+  /* Hide multi line text overflow */
+  overflow          : hidden;
+  display           : -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+
+  width : calc(100% - 80px);
+  height: 70px;
+}
+
+/* ------------------------------------------------------------------------------------ */
+/* Part Info column */
+/* ------------------------------------------------------------------------------------ */
+.part-Info-Box {
+  position: absolute;
+  padding : 5px;
+
+  left: calc(100% - 40%);
+  top : 0px;
+
+  width : calc(40% - 10px - 4px);
+  height: calc(100% - 10px - 4px);
+
+  border         : 2px solid var(--border-color);
+  border-collapse: collapse;
+}
+
+.part-Info-Image {
+  position       : relative;
+  object-position: center;
+
+  width : 150px;
+  height: 150px;
+
+  max-width : 100%;
+  max-height: 100%;
+}
+
+.part-Info-Name-Box {
+  position: absolute;
+
+  top : 5px;
+  left: 160px;
+
+  width : calc(100% - 160px);
+  height: 60px;
+
+  font-size: 25px;
+
+  overflow-y: auto;
+
+  border: 2px solid var(--border-color);
+}
+
+.part-Info-Sub-Box {
+  position: absolute;
+
+  --part-Info-Sub-Box-Width: calc(100% - 160px);
+  --part-Info-Location-Box-Width: calc(var(--part-Info-Sub-Box-Width) * 0.4);
+  --part-Info-Tag-Box-Width: calc(var(--part-Info-Sub-Box-Width) * 0.6);
+
+  top: 65px;
+
+  height: 90px;
+
+  font-size: 25px;
+
+  overflow-y: auto;
+
+  border: 2px solid var(--border-color);
+}
+
+/* Part Info Location */
+/* ------------------------------------------ */
+.part-Info-Location-Box {
+  width : var(--part-Info-Location-Box-Width);
+  left: 160px;
+}
+
+.part-Info-Location-Entry {
+  margin: 5px;
+
+  width : calc(100% - 10px);
+  height: 20px;
+
+  font-size: 16px;
+
+  border: 2px solid var(--border-color);
+}
+
+.part-Info-Location-Entry-Name {
+  max-width: 50%;
+
+  display: inline-block;
+
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.part-Info-Location-Entry-Quantity {
+  position  : absolute;
+  right     : 10px;
+  text-align: right;
+}
+
+/* Part Info Tags */
+/* ------------------------------------------ */
+.part-Info-Tags-Box {
+  width : var(--part-Info-Tag-Box-Width);
+  left: calc(160px + var(--part-Info-Location-Box-Width));
+
+  overflow: auto;
+}
+
+.part-Info-Tag-Entry {
+  margin: 4px 2px;
+  padding: 10px 20px;
+
+  --box-height: 16px;
+  height      : var(--box-height);
+
+  text-align : center;
+  text-decoration: none;
+  font-size  : 12px;
+
+  border-radius: 16px;
+
+  background-color: var(--button);
+  border: none;
+  display: inline-block;
+}
+
+/* Part Info Description */
+/* ------------------------------------------ */
+.part-Info-Description-Box {
+  position: relative;
+
+  width : 100%;
+  height: 100px;
+
+  font-size  : 16px;
+  
+  overflow-y: auto;
+
+  border: 2px solid var(--border-color);
+}
+
+/* Part Info attachments */
+.part-Info-attachment-Box {
+  position: relative;
+
+  margin: 5px;
+
+  width    : calc(100% - 10px);
+  height   : calc(100% - 250px - 10px);
+
+  overflow-y: auto;
+
+  border-collapse: collapse;
+  border         : 2px solid var(--border-color);
+}
+
+.part-Info-attachment-Entry {
+  padding-top   : 10px;
+  padding-bottom: 10px;
+  margin-left   : 10px;
+  margin-right  : 10px;
+
+  width          : calc(100% - 20px);
+  object-position: center;
+
+  border-collapse: collapse;
+}
+
+.bottom-Border {
+  border-bottom  : 5px solid var(--border-color);
+  border-collapse: collapse;
+}
+
+.top-Border {
+  border-top     : 5px solid var(--border-color);
+  border-collapse: collapse;
+}
