@@ -4,9 +4,11 @@ import json
 
 from difflib import SequenceMatcher
 import distance
+import time
 
-eel.init('')
-eel.start('web/test.html', block=False, mode='firefox')
+import os
+import sys
+
 
 # -------------------------------------------------------------
 handlerParts = PartsHandler()
@@ -17,6 +19,7 @@ handlerPartHistory = PartHistoryHandler()
 handlerAttachment = AttachmentsHandler()
 
 localCache = {}
+
 
 
 def loadTestDataToDB():
@@ -40,7 +43,7 @@ def loadTestDataToDB():
     handlerStorage.create("A6")
 
     # Create Attachments
-    handlerAttachment.create("image", "/temp", "a4Doc.jpg")
+    handlerAttachment.create("image", "", "a4Doc.jpg")
     handlerAttachment.create(
         "image", " ", "Screenshot_2021-06-01_07-09-02.png")
 
@@ -81,8 +84,7 @@ def reloadCache():
     }
 
 
-#loadTestDataToDB()
-#reloadCache()
+
 
 # -------------------------------------------------------------
 # Front end interaction functions
@@ -251,5 +253,30 @@ def getPartData(partID):
 
 
 # -------------------------------------------------------------
-while True:
-    eel.sleep(10)
+if __name__ == '__main__':
+    print("start")
+    try:
+        print("web start")
+        eel.init('web')
+        eel.start('test.html', block=False, mode='firefox')
+
+        #loadTestDataToDB()
+        #reloadCache()
+        print("test error")
+        #raise ValueError("Crashed because I'm a bad exception")
+
+        while True:
+            eel.sleep(10)
+
+    except Exception as e:
+        f = open("crashlog.txt", "w")
+        error_msg = str(e)
+        print(error_msg)
+        f.write("main crashed. Error: \n" + error_msg)
+        f.close() 
+
+    time.sleep(10)
+    
+
+          
+
