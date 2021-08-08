@@ -2,13 +2,18 @@ from datetime import datetime
 import sqlite3
 import json
 
+import os
+import sys
 
 #datetime.now()
-
+def get_resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
 
 
 def openConnection():
-    dbName = "test.db"
+    dbName = "web/test.db"
     connection = sqlite3.connect(dbName)
 
     return connection
@@ -16,7 +21,7 @@ def openConnection():
 def checkDBSetup():
     connection = openConnection()
     cursor = connection.cursor()
-    with open('DB_Structure.json') as f:
+    with open('web/DB_Structure.json') as f:
         dbTables = json.load(f)
 
     for tableName in dbTables:
@@ -109,7 +114,7 @@ class PartsHandler:
         
     def create(self, name, description = "", image = ""):
         if image == "":
-            image = "/data/attachments/default-image-620x600.jpg"
+            image = "default-image-620x600.jpg"
         return runQuery(self.sqlCreate, (name, description, image))
 
     def delete(self, partID):
