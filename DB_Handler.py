@@ -114,7 +114,7 @@ class PartsHandler:
         
     def create(self, name, description = "", image = ""):
         if image == "":
-            image = "/data/attachments/default-image-620x600.jpg"
+            image = "default-image-620x600.jpg"
         return runQuery(self.sqlCreate, (name, description, image))
 
     def delete(self, partID):

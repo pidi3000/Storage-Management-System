@@ -6,6 +6,8 @@ from difflib import SequenceMatcher
 import distance
 import time
 
+from pathlib import Path
+
 import os
 import sys
 
@@ -261,6 +263,11 @@ if __name__ == '__main__':
         eel.start('test.html', block=False, mode='firefox')
 
         #loadTestDataToDB()
+        #my_file = Path("web/first-run.txt")
+        #if not (my_file.is_file()):
+            #loadTestDataToDB()
+            #with open('web/first-run.txt', 'w'): pass
+
         #reloadCache()
         print("test error")
         #raise ValueError("Crashed because I'm a bad exception")
