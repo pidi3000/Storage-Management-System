@@ -1,5 +1,5 @@
 
-*.db
+__pycache__
 *.code-workspace
 .vscode/*
 

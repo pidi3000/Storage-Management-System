@@ -6,7 +6,7 @@ from difflib import SequenceMatcher
 import distance
 
 eel.init('')
-eel.start('web/test.html', block=False)
+eel.start('web/test.html', block=False, mode='firefox')
 
 # -------------------------------------------------------------
 handlerParts = PartsHandler()
@@ -81,8 +81,8 @@ def reloadCache():
     }
 
 
-# loadTestDataToDB()
-reloadCache()
+#loadTestDataToDB()
+#reloadCache()
 
 # -------------------------------------------------------------
 # Front end interaction functions
