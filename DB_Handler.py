@@ -68,7 +68,7 @@ def checkDBSetup():
 
         loadTestDataToDB()
 
-    connection.close()
+        connection.close()
 
 
 def loadTestDataToDB():
