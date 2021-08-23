@@ -62,7 +62,7 @@
                     <div id="part-ID" class="search-Result-Part-Box" onclick="showPartInfo(this.id)">
                         <div>
                             <img id="search-Result-Part-Image" class="search-Result-Part-Image"
-                                src="default-image-620x600.jpg" alt="part image">
+                                src="attachment/default-image-620x600.jpg" alt="part image">
                         </div>
 
                         <div class="search-Result-Part-Data-Box">
@@ -79,7 +79,7 @@
 
             <div class="part-Info-Box">
                 <div>
-                    <img id="part-Info-Image" class="part-Info-Image" src="default-image-620x600.jpg" alt="part image">
+                    <img id="part-Info-Image" class="part-Info-Image" src="attachment" alt="part image">
                 </div>
 
                 <div class="part-Info-Name-Box">
@@ -220,7 +220,7 @@
             if (part["Image"] != "") {
                 templateClone.getElementById("search-Result-Part-Image").src = part["Image"];
             } else {
-                templateClone.getElementById("search-Result-Part-Image").src = "default-image-620x600.jpg";
+                templateClone.getElementById("search-Result-Part-Image").src = "attachment";
             }
 
             templateClone.getElementById("search-Result-Part-Name").innerText = part["Name"];
@@ -245,7 +245,7 @@
         if (partData["Image"] != "") {
             document.getElementById("part-Info-Image").src = partData["Image"];
         } else {
-            document.getElementById("part-Info-Image").src = "default-image-620x600.jpg";
+            document.getElementById("part-Info-Image").src = "attachment";
         }
 
         document.getElementById("part-Info-Name").innerText = partData["Name"];

@@ -99,9 +99,9 @@ def loadTestDataToDB():
     handlerStorage.create("A6")
 
     # Create Attachments
-    handlerAttachment.create("image", "", "a4Doc.jpg")
+    handlerAttachment.create("image", "attachment", "a4Doc.jpg")
     handlerAttachment.create(
-    "image", " ", "Screenshot_2021-06-01_07-09-02.png")
+    "image", "attachment", "Screenshot_2021-06-01_07-09-02.png")
 
     ##############################################
 
@@ -182,7 +182,7 @@ class PartsHandler:
         
     def create(self, name, description = "", image = ""):
         if image == "":
-            image = "default-image-620x600.jpg"
+            image = "attachment/default-image-620x600.jpg"
         return runQuery(self.sqlCreate, (name, description, image))
 
     def delete(self, partID):
