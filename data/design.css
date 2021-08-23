@@ -23,23 +23,6 @@
   --header-height: 56px;
 }
 
-.light {
-  --bg-color         : var(--gray0);
-  --bg-color-brighter: var(--gray1);
-  --bg-color-darker  : var(--gray2);
-
-  --text      : var(--gray6);
-  --text-hover: var(--gray6);
-
-  --border-color: var(--red);
-  --box-shadow  : var(--gray3);
-
-  --bg-header-menu: var(--gray0);
-
-  --button      : var(--gray1);
-  --button-hover: var(--gray2);
-}
-
 
 .dark {
   --bg-color         : var(--gray5-5);
@@ -56,6 +39,24 @@
 
   --button      : var(--gray4);
   --button-hover: var(--gray3);
+}
+
+
+.light {
+  --bg-color         : var(--gray0);
+  --bg-color-brighter: var(--gray1);
+  --bg-color-darker  : var(--gray2);
+
+  --text      : var(--gray6);
+  --text-hover: var(--gray6);
+
+  --border-color: var(--red);
+  --box-shadow  : var(--gray3);
+
+  --bg-header-menu: var(--gray0);
+
+  --button      : var(--gray1);
+  --button-hover: var(--gray2);
 }
 
 /* ------------------------------------------ */
@@ -289,6 +290,10 @@ body {
 
 .search-Result-Part-Box:hover {
   opacity: 0.5;
+}
+
+.part-Preview-Selected{
+  background-color: var(--button-hover);
 }
 
 .search-Result-Part-Image {

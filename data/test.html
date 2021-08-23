@@ -59,7 +59,7 @@
 
                 <div id="search-Result-List" class="search-Result-List"> </div>
                 <template id="search-Result-Part-Template">
-                    <div id="part-ID" class="search-Result-Part-Box" onclick="showPartInfo(this.id)">
+                    <div id="part-ID" class="search-Result-Part-Box" onclick="showPartInfo(this)">
                         <div>
                             <img id="search-Result-Part-Image" class="search-Result-Part-Image"
                                 src="attachment/default-image-620x600.jpg" alt="part image">
@@ -233,7 +233,18 @@
         });
     }
 
-    async function showPartInfo(partID) {
+    async function showPartInfo(partElement) {
+        partID = partElement.id;
+
+        // Highlight previewed part
+        oldPreviewPart = document.querySelector(".part-Preview-Selected");
+        if (oldPreviewPart) {
+            oldPreviewPart.classList.remove("part-Preview-Selected")            
+        }
+
+        partElement.classList.add("part-Preview-Selected")
+
+        // Get part data from DB
         var partData = JSON.parse(await eel.getPartData(partID)());
 
         if (partData == "none") {
