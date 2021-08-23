@@ -229,11 +229,13 @@ def getPartData(partID):
     locations = []
     for location in allLocations:
         locationID = location[2]
+        ps_ID = location[0]
         locationName = handlerStorage.getName(locationID)
         locationQuantity = location[3]
 
         locations.append({
             "ID": locationID,
+            "PS_ID": ps_ID,
             "Name": locationName,
             "Quantity": locationQuantity
         })
@@ -266,11 +268,17 @@ if __name__ == '__main__':
             with open('web/first-run.txt', 'w'): pass
 
         #reloadCache()
-        print("test error")
         #raise ValueError("Crashed because I'm a bad exception")
 
         while True:
             eel.sleep(10)
+    except (SystemExit, MemoryError, KeyboardInterrupt):
+        #Handle errors and the potential hanging python.exe process
+        print("Closing task")
+        sys.exit() 
+        
+        os.system('taskkill /F /IM python.exe /T')
+        print("done")
 
     except Exception as e:
         f = open("crashlog.txt", "w")
@@ -279,6 +287,7 @@ if __name__ == '__main__':
         f.write("main crashed. Error: \n" + error_msg)
         f.close() 
 
+    
     time.sleep(10)
     
 

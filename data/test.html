@@ -44,6 +44,16 @@
             </div>
 
             <div class="part-Search-Box">
+                <div class="part-Search-Title">
+                    <b>Parts</b>
+                    <!-- Add part button -->
+
+                    <div id="add-Part-Button" class="add-Part-Button" onclick="openAddPartMenu()">
+                        Add part
+                    </div>
+
+                </div>
+
                 <input id="partSearchInput" type="text" placeholder="Search" class="part-Search-Input"
                     oninput="searchPart()">
 
@@ -69,8 +79,7 @@
 
             <div class="part-Info-Box">
                 <div>
-                    <img id="part-Info-Image" class="part-Info-Image" src="default-image-620x600.jpg"
-                        alt="part image">
+                    <img id="part-Info-Image" class="part-Info-Image" src="default-image-620x600.jpg" alt="part image">
                 </div>
 
                 <div class="part-Info-Name-Box">
@@ -79,7 +88,7 @@
 
                 <div id="part-Info-Location-List" class="part-Info-Sub-Box part-Info-Location-Box"> </div>
                 <template id="part-Info-Location-Entry-Template">
-                    <div id="part-Info-Location-Entry" class="part-Info-Location-Entry">
+                    <div id="part-Info-Location-Entry" class="part-Info-Location-Entry" onclick="editQuantity(this.id)">
                         <span id="part-Info-Location-Entry-Name" class="part-Info-Location-Entry-Name"></span>
                         <span id="part-Info-Location-Entry-Quantity" class="part-Info-Location-Entry-Quantity"></span>
                     </div>
@@ -113,6 +122,8 @@
 
 <script>
     // Search menu script
+
+    //On first page load search with empty search string to display all parts, tags and loactions
     searchPart("");
     searchTag("");
     searchLocation("");
@@ -120,7 +131,7 @@
 
     // Search Filter stuff
     // ------------------------------------------------------------------------------------------------------------------------
-    var searchFilter = { "Tags": [], "Locations": [] };
+    var searchFilter = { "Tags": [], "Locations": "" };
 
     function handleFilterSearchResult(filterType, searchResult) {
         var filterList = document.getElementById("part-Filter-" + filterType + "-List");
@@ -151,17 +162,37 @@
     }
 
     function toggleFilter(filterType, tag) {
-        if (tag.classList.contains("part-Filter-Entry-Selected")) {
-            tag.classList.remove("part-Filter-Entry-Selected");
+        if (filterType == "Tags") {
+            if (tag.classList.contains("part-Filter-Entry-Selected")) {
+                tag.classList.remove("part-Filter-Entry-Selected");
 
-            // Remove tag from filter array
-            const index = searchFilter[filterType].indexOf(tag.id);
-            if (index > -1) {
-                searchFilter[filterType].splice(index, 1);
+                // Remove tag from filter array
+                const index = searchFilter["Tags"].indexOf(tag.id);
+                if (index > -1) {
+                    searchFilter["Tags"].splice(index, 1);
+                }
+            } else {
+                tag.classList.add("part-Filter-Entry-Selected");
+                searchFilter["Tags"].push(tag.id);
             }
-        } else {
-            tag.classList.add("part-Filter-Entry-Selected");
-            searchFilter[filterType].push(tag.id);
+
+        } else if (filterType == "Locations") {
+            oldLocationTagID = searchFilter["Locations"];
+
+            // Remove old tag
+            if (oldLocationTagID) {
+                locationFilterList = document.getElementById("part-Filter-Locations-List");
+                oldLocationTag = locationFilterList.querySelector(".part-Filter-Entry-Selected");
+                oldLocationTag.classList.remove("part-Filter-Entry-Selected");
+            }
+
+            // Set new tag
+            if (oldLocationTagID != tag.id) {
+                searchFilter["Locations"] = tag.id;
+                tag.classList.add("part-Filter-Entry-Selected");
+            } else {
+                searchFilter["Locations"] = "";
+            }
         }
 
         searchPart();
@@ -232,7 +263,7 @@
         locations.forEach(locationInfo => {
             var templateClone = template.content.cloneNode(true);
 
-            templateClone.getElementById("part-Info-Location-Entry").id = locationInfo["ID"];
+            templateClone.getElementById("part-Info-Location-Entry").id = locationInfo["PS_ID"];
 
             templateClone.getElementById("part-Info-Location-Entry-Name").innerText = locationInfo["Name"];
             templateClone.getElementById("part-Info-Location-Entry-Name").title = locationInfo["Name"];
@@ -295,6 +326,17 @@
             formatedQuantity = formatedQuantity[0] + "." + formatedQuantity[1].substr(0, 1) + "K";
         }
         return formatedQuantity
+    }
+</script>
+
+<script>
+    function openAddPartMenu() {
+        alert("add new part menu");
+    }
+
+    function editQuantity(partInStorage_ID) {
+        alert("Edit quantity, ID: " + partInStorage_ID);
+
     }
 </script>
 
