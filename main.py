@@ -6,7 +6,10 @@ from difflib import SequenceMatcher
 import distance
 import time
 
-from pathlib import Path
+# -------------------------------------------------------------
+
+pathWebDir = "data"
+path = "data"
 
 
 # -------------------------------------------------------------
@@ -18,7 +21,6 @@ handlerPartHistory = PartHistoryHandler()
 handlerAttachment = AttachmentsHandler()
 
 localCache = {}
-
 
 
 def loadTestDataToDB():
@@ -257,15 +259,9 @@ def getPartData(partID):
 if __name__ == '__main__':
     print("start")
     try:
-        print("web start")
-        eel.init('web')
+        print("Web start")
+        eel.init(pathWebDir)
         eel.start('test.html', block=False, mode='firefox')
-
-        #loadTestDataToDB()
-        my_file = Path("web/first-run.txt")
-        if not (my_file.is_file()):
-            loadTestDataToDB()
-            with open('web/first-run.txt', 'w'): pass
 
         #reloadCache()
         #raise ValueError("Crashed because I'm a bad exception")

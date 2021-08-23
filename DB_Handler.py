@@ -4,6 +4,9 @@ import json
 
 import os
 import sys
+from pathlib import Path
+
+pathDatabaseFile = "data/test.db"
 
 #datetime.now()
 def get_resource_path(relative_path):
@@ -13,55 +16,120 @@ def get_resource_path(relative_path):
 
 
 def openConnection():
-    dbName = "web/test.db"
-    connection = sqlite3.connect(dbName)
+    connection = sqlite3.connect(pathDatabaseFile)
 
     return connection
 
 def checkDBSetup():
-    connection = openConnection()
-    cursor = connection.cursor()
-    with open('web/DB_Structure.json') as f:
-        dbTables = json.load(f)
+    my_file = Path(pathDatabaseFile)
+    if not (my_file.is_file()):
 
-    for tableName in dbTables:
-        tableStructure = dbTables[tableName]
+        connection = openConnection()
+        cursor = connection.cursor()
+        with open('data/DB_Structure.json') as f:
+            dbTables = json.load(f)
 
-        sqlCreateTable = "CREATE TABLE IF NOT EXISTS " + tableName + " ( "
+        for tableName in dbTables:
+            tableStructure = dbTables[tableName]
 
-        primaryKeys = ""
-        for columnName in tableStructure:
-            columnData = tableStructure[columnName]
+            sqlCreateTable = "CREATE TABLE IF NOT EXISTS " + tableName + " ( "
 
-            sqlCreateTable += columnName + " "
-            sqlCreateTable += columnData["Type"] + " "
+            primaryKeys = ""
+            for columnName in tableStructure:
+                columnData = tableStructure[columnName]
 
-            if "NOT NULL" in columnData:
-                if columnData["NOT NULL"]:
-                    sqlCreateTable += "NOT NULL "
+                sqlCreateTable += columnName + " "
+                sqlCreateTable += columnData["Type"] + " "
 
-            if "PRIMARY KEY" in columnData:
-                if columnData["PRIMARY KEY"]:
-                    primaryKeys += columnName + ", "
+                if "NOT NULL" in columnData:
+                    if columnData["NOT NULL"]:
+                        sqlCreateTable += "NOT NULL "
 
-            if "AUTO_INCREMENT" in columnData:
-                if columnData["AUTO_INCREMENT"]:
-                    pass  # sqlCreateTable += "AUTOINCREMENT "
+                if "PRIMARY KEY" in columnData:
+                    if columnData["PRIMARY KEY"]:
+                        primaryKeys += columnName + ", "
 
-            sqlCreateTable += ", "
+                if "AUTO_INCREMENT" in columnData:
+                    if columnData["AUTO_INCREMENT"]:
+                        pass  # sqlCreateTable += "AUTOINCREMENT "
 
-        if primaryKeys != "":
-            sqlCreateTable += "PRIMARY KEY (" + primaryKeys[:-2] + ")"
+                sqlCreateTable += ", "
 
-        if sqlCreateTable[-2:] == ", ":
-            sqlCreateTable = sqlCreateTable[:-3]
+            if primaryKeys != "":
+                sqlCreateTable += "PRIMARY KEY (" + primaryKeys[:-2] + ")"
 
-        sqlCreateTable += ") "
+            if sqlCreateTable[-2:] == ", ":
+                sqlCreateTable = sqlCreateTable[:-3]
 
-        # print(sqlCreateTable)
-        cursor.execute(sqlCreateTable)
+            sqlCreateTable += ") "
+
+            # print(sqlCreateTable)
+            cursor.execute(sqlCreateTable)
+
+        loadTestDataToDB()
 
     connection.close()
+
+
+def loadTestDataToDB():
+    handlerParts = PartsHandler()
+    handlerTags = TagsHandler()
+    handlerStorage = StorageHandler()
+    handlerPartInStorage = PartInStorageHandler()
+    handlerPartHistory = PartHistoryHandler()
+    handlerAttachment = AttachmentsHandler()
+
+    # Create parts
+    handlerParts.create("LED red", "A normal red LED")
+    handlerParts.create("LED blue", "A normal blue SMD LED ")
+    handlerParts.create("LED green", "A normal green THC LED")
+    handlerParts.create("Arduino Mega",
+    "A Arduino Mega board with the ATmega 256 chip")
+
+    # Create Tags
+    handlerTags.create("LED", "Tag for leds")
+    handlerTags.create("SMD", "SMD build format")
+    handlerTags.create("THC", "Through hole component")
+    handlerTags.create("Arduino", "Arduino boards")
+
+    # Create Locations
+    handlerStorage.create("C5", "Nothing")
+    handlerStorage.create("B9", "Default")
+    handlerStorage.create("R34")
+    handlerStorage.create("A6")
+
+    # Create Attachments
+    handlerAttachment.create("image", "", "a4Doc.jpg")
+    handlerAttachment.create(
+    "image", " ", "Screenshot_2021-06-01_07-09-02.png")
+
+    ##############################################
+
+    # Connect Parts and Tags
+    handlerParts.connectTag(1, 1)
+    handlerParts.connectTag(2, 1)
+    handlerParts.connectTag(3, 1)
+
+    handlerParts.connectTag(2, 2)
+    handlerParts.connectTag(3, 3)
+    handlerParts.connectTag(4, 4)
+
+    # Connect Parts and Attachment
+    handlerParts.connectAttachment(2, 1)
+    handlerParts.connectAttachment(3, 2)
+
+    handlerParts.connectAttachment(4, 1)
+    handlerParts.connectAttachment(4, 2)
+
+    # Connect Parts and Location
+    handlerPartInStorage.add(1, 1, 30)
+    handlerPartInStorage.add(2, 2, 100)
+
+    handlerPartInStorage.add(3, 3, 5214)
+    handlerPartInStorage.add(3, 4, 56)
+
+    handlerPartInStorage.add(4, 1, 19)
+    handlerPartInStorage.add(4, 4, 5)
 
 def runQuery(sqlQuery, dataList):
     connection = openConnection()
