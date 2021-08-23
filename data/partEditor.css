@@ -1,0 +1,127 @@
+.part-Editor-Menu {
+    position: absolute;
+    z-index : 100;
+
+    top : 0%;
+    left: 0%;
+
+    width : 100%;
+    height: 100%;
+
+    background-color: rgba(0, 0, 0, 0.5);
+
+    display  : none;
+    animation: zoom-in-zoom-out 500ms ease-in-out;
+}
+
+.part-Editor-Menu-Box {
+    position: absolute;
+
+    --edit-Menu-Control-Bar-Size: 20px;
+    --edit-Menu-Border-Size: 5px;
+    border                 : var(--edit-Menu-Border-Size) solid var(--bg-color-brighter);
+
+
+    --edit-Menu-Width : calc(80% - var(--edit-Menu-Border-Size) * 2);
+    --edit-Menu-Height: calc(80% - var(--edit-Menu-Border-Size) * 2);
+
+    width : var(--edit-Menu-Width);
+    height: var(--edit-Menu-Height);
+
+    left: calc((100% - var(--edit-Menu-Width)) / 2);
+    top : calc((100% - var(--edit-Menu-Height)) / 2);
+
+    background   : var(--bg-color);
+    /* transition: all 250ms ease-in-out, color 500ms ease-in-out; */
+}
+
+@keyframes zoom-in-zoom-out {
+    0% {
+        transform: scale(0, 0);
+    }
+
+    100% {
+        transform: scale(1, 1);
+    }
+}
+
+.part-Editor-Menu-Control-Bar {
+
+    text-align     : right;
+    justify-content: right;
+
+    width : 100%;
+    height: var(--edit-Menu-Control-Bar-Size);
+
+    background: var(--bg-color-brighter);
+}
+
+.part-Editor-Menu-Close-Button {
+    position   : absolute;
+    right      : 0px;
+    text-align : right;
+    line-height: var(--edit-Menu-Control-Bar-Size);
+
+    width : var(--edit-Menu-Control-Bar-Size);
+    height: var(--edit-Menu-Control-Bar-Size);
+
+
+}
+
+.part-Editor-Menu-Close-Button:hover {
+    background: var(--bg-color);
+
+    background: var(--bg-color);
+}
+
+.part-Editor-Content-Box {
+    position: relative;
+
+    padding: 5px;
+
+    height: calc(100% - var(--edit-Menu-Control-Bar-Size));
+    width: 100%;
+
+}
+
+
+/* ------------------------------------------------------------------------------------ */
+/* Part Info column */
+/* ------------------------------------------------------------------------------------ */
+
+.part-Editor-Image {
+    position       : relative;
+    object-position: center;
+
+    width : 150px;
+    height: 150px;
+
+    max-width : 100%;
+    max-height: 100%;
+}
+
+.part-Editor-Name{
+    position       : absolute;
+
+    top: 5px;
+    left: 160px;
+
+    width : calc(100% - 185px);
+    height: 20px;
+
+    font-size: 16px;
+
+}
+
+.part-Editor-Description{
+    position       : absolute;
+
+    top: 35px;
+    left: 160px;
+
+    width : calc(100% - 185px);
+    height: 110px;
+    
+    font-size: 14px;
+    resize: none;
+}

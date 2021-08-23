@@ -6,13 +6,13 @@
     <title>Storage management</title>
 
     <link rel="stylesheet" href="design.css">
+    <link rel="stylesheet" href="partEditor.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script type="text/javascript" src="/eel.js"></script>
 </head>
 
 <body class="dark">
-    Storage management system
 
     <div class="pageContentBox">
         <div id="search-Menu" class="search-Menu-Box">
@@ -104,6 +104,23 @@
             </div>
         </div>
 
+<!-- ################################################################################################################################## -->
+        <div id="part-Editor-Menu" class="part-Editor-Menu">
+            <div id="part-Editor-Menu-Box" class="part-Editor-Menu-Box">
+                <div class="part-Editor-Menu-Control-Bar">
+                    <div class="part-Editor-Menu-Close-Button" onclick="canlceEditMenu()">
+                        X
+                    </div>
+                </div>
+
+                <div id="part-Editor-Content-Box" class="part-Editor-Content-Box">
+                    <img id="part-Editor-Image" class="part-Editor-Image" src="attachment/default-image-620x600.jpg" alt="part image">
+
+                    <input type="text" name="part-Name" id="part-Editor-Name" class="part-Editor-Name">
+                    <textarea  name="part-Description" id="part-Editor-Description" rows="7" class="part-Editor-Description"></textarea>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 
@@ -239,7 +256,7 @@
         // Highlight previewed part
         oldPreviewPart = document.querySelector(".part-Preview-Selected");
         if (oldPreviewPart) {
-            oldPreviewPart.classList.remove("part-Preview-Selected")            
+            oldPreviewPart.classList.remove("part-Preview-Selected")
         }
 
         partElement.classList.add("part-Preview-Selected")
@@ -341,8 +358,35 @@
 </script>
 
 <script>
+    partEditorWindow = document.getElementById("part-Editor-Menu");
+
+    function openPartEditor(mode, partID = -1) {
+        console.log("test")
+        //partEditorWindow.classList.add("zoom-in-out-box")
+        partEditorWindow.style.display = "block";
+
+        if (mode == "add") {
+
+        } else if (mode == "edit") {
+
+        }
+
+    }
+
     function openAddPartMenu() {
-        alert("add new part menu");
+        //filepath = eel.ask_file()()
+
+        openPartEditor("add");
+    }
+
+    function closeEditMenu() {
+        partEditorWindow.style.display = "none";
+    }
+
+    function canlceEditMenu() {
+        // TODO show warnning popup
+
+        closeEditMenu();
     }
 
     function editQuantity(partInStorage_ID) {
