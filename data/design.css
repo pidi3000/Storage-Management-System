@@ -22,9 +22,8 @@
 
   --header-height: 0px; /* 56px; */
 
-  --part-Filter-Column-Width: 13%;
-  --part-Search-Column-Width: calc((100% - var(--part-Filter-Column-Width)) / 10 * 4);
-  --part-Info-Column-Width: calc((100% - var(--part-Filter-Column-Width)) / 10 * 6);
+  --part-Search-Column-Width: calc( 45% );
+  --part-Info-Column-Width: calc( 100% - var(--part-Search-Column-Width));
 }
 
 
@@ -150,10 +149,10 @@ body {
   padding : 5px;
 
   left: 0px;
-  top : 0px;
+  top : calc(var(--part-Search-Title-Bar) + 20px);
 
-  width : calc(var(--part-Filter-Column-Width) - 10px - 4px);
-  height: calc(100% - 10px - 4px);
+  width : calc(100% - 10px);
+  height: calc(25% - 10px - 4px);
 
   border         : 2px solid var(--border-color);
   border-collapse: collapse;
@@ -163,7 +162,7 @@ body {
   padding-bottom: 10px;
 
   text-align: center;
-  font-size : 26px;
+  font-size : 22px;
 
   width : 100%;
   height: 32px;
@@ -173,16 +172,24 @@ body {
 /* Part Filter Tags */
 /* ------------------------------------------ */
 .part-Filter-Sub-Box {
+  position: absolute;
+  top: 40px;
   padding: 5px;
 
-  width : calc(100% - 10px);
-  height: calc((100% - 72px) / 2);
+  width : calc(100%  / 2 - 20px);
+  height: calc(100% - 50px);
+}
+
+.part-Filter-Location-Box{
+  left : calc((100% - 20px) / 2 + 10px);
 }
 
 .part-Filter-Sub-Title {
   padding-bottom: 10px;
 
-  font-size: 20px;
+  text-align: center;
+
+  font-size: 18px;
 
   width : 100%;
   height: 24px;
@@ -194,7 +201,7 @@ body {
   width : calc(100% - 5px);
   height: 20px;
 
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .part-Filter-List {
@@ -206,8 +213,6 @@ body {
   background-color: var(--box-shadow);
 
   overflow: auto;
-
-  border: 2px solid var(--border-color);
 }
 
 .part-Filter-Entry {
@@ -253,13 +258,12 @@ body {
   position: absolute;
   padding : 5px;
 
-  left: calc(var(--part-Filter-Column-Width));
+  left: 0px;
   top : 0px;
 
   width : calc(var(--part-Search-Column-Width) - 10px - 4px);
   height: calc(100% - 10px - 4px);
 
-  border         : 2px solid var(--border-color);
   border-collapse: collapse;
 }
 
@@ -273,11 +277,18 @@ body {
 }
 
 .search-Result-List {
-  width : calc(100%);
-  height: calc(100% - 40px - 32px - 4px);
+  position: absolute;
+
+  top : calc(25% + 90px);
+  left: 10px;
+
+  width : calc(100% - 20px);
+  height: calc(70% - 40px - 4px);
 
   overflow-x: auto;
   overflow-y: scroll;
+
+  background-color: var(--bg-color-darker);
 }
 
 .search-Result-Part-Box {
@@ -344,7 +355,7 @@ body {
   position: absolute;
   padding : 5px;
 
-  left: calc((var(--part-Filter-Column-Width) + var(--part-Search-Column-Width)));
+  left: var(--part-Search-Column-Width);
   top : 0px;
 
   width : calc(var(--part-Info-Column-Width) - 10px - 4px);

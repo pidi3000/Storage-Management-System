@@ -1,6 +1,15 @@
-from DB_Handler import *
-import eel
+
+import os
+from shutil import copyfile
+
 import json
+import eel
+import tkinter as tk
+from tkinter import filedialog
+
+
+from DB_Handler import *
+from Part_Handler import *
 
 from difflib import SequenceMatcher
 import distance
@@ -22,17 +31,46 @@ handlerAttachment = AttachmentsHandler()
 # -------------------------------------------------------------
 
 
+
+@eel.expose
+def ask_file():
+    # file_flags consists of tuple of tuples, i.e. (("jpeg files", "*.jpg"), ("all files", "*.*))
+    root = tk.Tk()
+    root.withdraw()
+    root.wm_attributes("-topmost", 1)
+    file_path = filedialog.askopenfile(initialdir=os.path.expanduser("~/Desktop"), title="Select File",
+                                       filetypes=(("Images", "*.png, *.jpg"), ("all files", "*.*"),))
+    print(file_path.name)
+    root.destroy()
+
+    if file_path.name:
+        # copy file
+        file_name = os.path.basename(file_path.name)
+
+        new_Image_Path = "data/attachment/temp/" + file_name
+        new_Image_Web_Path = "attachment/temp/" + file_name
+
+        copyfile(file_path.name, new_Image_Path)
+
+        return new_Image_Web_Path
+
+    return None
+    # return file_path.name if file_path.name else ""
+
+
+# Search Stuff
 @eel.expose
 def searchTag(searchText):
     resultTags = []
     allTags = handlerTags.getAll()
-    
+
     for tag in allTags:
         # Check if search matches
         searchText = str(searchText).lower()
         tagNameFormated = str(tag[1]).lower()
 
-        similarityRatio = SequenceMatcher(None, searchText, tagNameFormated).ratio()
+        similarityRatio = SequenceMatcher(
+            None, searchText, tagNameFormated).ratio()
 
         if searchText in tag[2].lower() or searchText in tagNameFormated or similarityRatio > 0.8:
             resultTags.append(
@@ -57,7 +95,8 @@ def searchLocation(searchText):
         searchText = str(searchText).lower()
         locationNameFormated = str(location[1]).lower()
 
-        similarityRatio = SequenceMatcher(None, searchText, locationNameFormated).ratio()
+        similarityRatio = SequenceMatcher(
+            None, searchText, locationNameFormated).ratio()
 
         if searchText in location[2].lower() or searchText in locationNameFormated or similarityRatio > 0.8:
             result.append(
@@ -112,9 +151,12 @@ def searchPart(searchText, searchFilter=None):
             searchText = str(searchText).lower()
             partNameFormated = str(partName).lower()
 
-            similarityRatio = SequenceMatcher(None, searchText, partNameFormated).ratio()
-            similarityRatio1 = distance.nlevenshtein(searchText, partNameFormated, method=1)
-            similarityRatio2 = distance.nlevenshtein(searchText, partNameFormated, method=2)
+            similarityRatio = SequenceMatcher(
+                None, searchText, partNameFormated).ratio()
+            similarityRatio1 = distance.nlevenshtein(
+                searchText, partNameFormated, method=1)
+            similarityRatio2 = distance.nlevenshtein(
+                searchText, partNameFormated, method=2)
             #similarityRatio2 = distance.hamming(searchText, partName, normalized=True)
 
             if searchText in partNameFormated or searchText in str(partDescription).lower() or similarityRatio > 0.8:
@@ -125,12 +167,12 @@ def searchPart(searchText, searchFilter=None):
 
                 result.append(
                     {"ID": partID,
-                    "Name": partName,
-                    "Description": partDescription,
-                    "Image": part[3],
-                    "Total-Quantity": totalQuantity,
-                    "similarityRatio": similarityRatio
-                    })
+                     "Name": partName,
+                     "Description": partDescription,
+                     "Image": part[3],
+                     "Total-Quantity": totalQuantity,
+                     "similarityRatio": similarityRatio
+                     })
 
     result.sort(key=lambda part: part["similarityRatio"], reverse=True)
 
@@ -183,6 +225,25 @@ def getPartData(partID):
     return json.dumps(partData)
 
 
+# Part handling
+#############################################################################################
+@eel.expose
+def addNewPart(json_Part_Data):
+    part_Data = json.loads(json_Part_Data)
+
+    return handleNewPart(part_Data)
+
+@eel.expose
+def editPart(partID, json_Part_Data):
+    part_Data = json.loads(json_Part_Data)
+
+    return handleEditPart(partID, part_Data)
+
+@eel.expose
+def deletePart(partID):
+    return handleDeletePart(partID)
+
+
 # -------------------------------------------------------------
 if __name__ == '__main__':
     print("start")
@@ -195,10 +256,10 @@ if __name__ == '__main__':
             eel.sleep(10)
 
     except (SystemExit, MemoryError, KeyboardInterrupt):
-        #Handle errors and the potential hanging python.exe process
+        # Handle errors and the potential hanging python.exe process
         print("Closing task")
-        sys.exit() 
-        
+        sys.exit()
+
         os.system('taskkill /F /IM python.exe /T')
         print("done")
 
@@ -207,11 +268,6 @@ if __name__ == '__main__':
         error_msg = str(e)
         print(error_msg)
         f.write("main crashed. Error: \n" + error_msg)
-        f.close() 
+        f.close()
 
-    
     time.sleep(10)
-    
-
-          
-

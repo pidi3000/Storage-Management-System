@@ -157,6 +157,7 @@ class PartsHandler:
 
     sqlGetAll = f"SELECT * FROM {sqlTableName} ORDER BY Part_Name"
     sqlGetByID = f"SELECT * FROM {sqlTableName} WHERE {sqlPrefix}_ID = ? LIMIT 1"
+    sqlGetImageByID = f"SELECT {sqlPrefix}_Image FROM {sqlTableName} WHERE {sqlPrefix}_ID = ? LIMIT 1"
 
     sqlUpdateName = f"UPDATE {sqlTableName} SET {sqlPrefix}_Name = ? WHERE {sqlPrefix}_ID = ?"
     sqlUpdateDescription = f"UPDATE {sqlTableName} SET {sqlPrefix}_Description = ? WHERE {sqlPrefix}_ID = ?"
@@ -180,16 +181,19 @@ class PartsHandler:
     def __init__(self):
         pass #print("class start")
         
-    def create(self, name, description = "", image = ""):
-        if image == "":
-            image = "attachment/default-image-620x600.jpg"
-        return runQuery(self.sqlCreate, (name, description, image))
+    def create(self, name, description = "", image_WebPath = ""):
+        if image_WebPath == "":
+            image_WebPath = "attachment/default-image-620x600.jpg"
+        return runQuery(self.sqlCreate, (name, description, image_WebPath))
 
     def delete(self, partID):
         return runQuery(self.sqlDelete, (partID, ))
 
     def getByID(self, partID):
         return runQuery(self.sqlGetByID, (partID, ))[0]
+        
+    def getImageByID(self, partID):
+        return runQuery(self.sqlGetImageByID, (partID, ))[0][0]
 
     def getAll(self):
         return runQuery(self.sqlGetAll, None)
@@ -200,8 +204,8 @@ class PartsHandler:
     def updateDescription(self, partID, description):
         return runQuery(self.sqlUpdateDescription, (description, partID, ))
 
-    def updateImage(self, partID, image):
-        return runQuery(self.sqlUpdateImage, (image, partID, ))
+    def updateImage(self, partID, image_WebPath):
+        return runQuery(self.sqlUpdateImage, (image_WebPath, partID, ))
     #########################################
     #              Tag Handler              #
     #########################################
@@ -212,6 +216,7 @@ class PartsHandler:
     def disconnectTag(self, partID, tagID):
         return runQuery(self.sqlDisconnectTag, (partID, tagID, ))
 
+    # Returns tagID of all tags's
     def getConnectedTags(self, partID):
         tagList = []
         for tag in runQuery(self.sqlGetConnectedTags, (partID, )):
@@ -229,6 +234,7 @@ class PartsHandler:
     def disconnectAttachment(self, partID, attachmentID):
         return runQuery(self.sqlDisconnectAttachment, (partID, attachmentID, ))
 
+    # Returns attachmentID of all attachment's
     def getConnectedAttachments(self, partID):
         attachmentList = []
         for attachment in runQuery(self.sqlGetConnectedAttachments, (partID, )):
@@ -337,14 +343,14 @@ class StorageHandler:
     #           Attachment Handler          #
     #########################################
 
-    def connectAttachment(self, partID, attachmentID):
-        return runQuery(self.sqlConnectTag, (partID, attachmentID, ))
+    def connectAttachment(self, locationID, attachmentID):
+        return runQuery(self.sqlConnectTag, (locationID, attachmentID, ))
 
-    def disconnectAttachment(self, partID, attachmentID):
-        return runQuery(self.sqlDisconnectTag, (partID, attachmentID, ))
+    def disconnectAttachment(self, locationID, attachmentID):
+        return runQuery(self.sqlDisconnectTag, (locationID, attachmentID, ))
 
-    def getConnectedAttachments(self, partID):
-        return runQuery(self.sqlGetConnectedTags, (partID, ))
+    def getConnectedAttachments(self, locationID):
+        return runQuery(self.sqlGetConnectedTags, (locationID, ))
 #########################################################################################
 
 class PartInStorageHandler:
@@ -354,10 +360,12 @@ class PartInStorageHandler:
 
     sqlAdd = f"INSERT INTO {sqlTableName} (Part_ID, Location_ID, Quantity) VALUES(?,?,?)"
     sqlRemove = f"DELETE FROM {sqlTableName} WHERE {sqlPrefix}_ID = ?"
+    sqlRemovePart = f"DELETE FROM {sqlTableName} WHERE Part_ID = ?"
 
     sqlGetAll = f"SELECT * FROM {sqlTableName}"
     sqlGetByID = f"SELECT * FROM {sqlTableName} WHERE {sqlPrefix}_ID = ? LIMIT 1"
     sqlGetAllPartLocations = f"SELECT * FROM {sqlTableName} WHERE Part_ID = ?"
+    sqlGetAllPartLocationIDs = f"SELECT {sqlPrefix}_ID FROM {sqlTableName} WHERE Part_ID = ?"
 
     sqlUpdateLocation = f"UPDATE {sqlTableName} SET Location_ID = ? WHERE {sqlPrefix}_ID = ?"
     sqlUpdateQuantity = f"UPDATE {sqlTableName} SET Quantity = ? WHERE {sqlPrefix}_ID = ?"
@@ -379,11 +387,20 @@ class PartInStorageHandler:
     def remove(self, psID):
         return runQuery(self.sqlRemove, (psID, ))
 
+    def removePart(self, partID):
+        return runQuery(self.sqlRemovePart, (partID, ))
+
     def getByID(self, psID):
         return runQuery(self.sqlGetByID, (psID, ))
 
     def getAllPartLocations(self, partID):
         return runQuery(self.sqlGetAllPartLocations, (partID, ))
+        
+    def getAllPartLocationIDs(self, partID):
+        partLocationList = []
+        for partLocation in runQuery(self.sqlGetAllPartLocationIDs, (partID, )):
+            partLocationList.append(partLocation[0])
+        return partLocationList
 
     def getAll(self):
         return runQuery(self.sqlGetAll, None)
@@ -398,14 +415,14 @@ class PartInStorageHandler:
     #           Attachment Handler          #
     #########################################
 
-    def connectAttachment(self, partID, attachmentID):
-        return runQuery(self.sqlConnectTag, (partID, attachmentID, ))
+    def connectAttachment(self, psID, attachmentID):
+        return runQuery(self.sqlConnectTag, (psID, attachmentID, ))
 
-    def disconnectAttachment(self, partID, attachmentID):
-        return runQuery(self.sqlDisconnectTag, (partID, attachmentID, ))
+    def disconnectAttachment(self, psID, attachmentID):
+        return runQuery(self.sqlDisconnectTag, (psID, attachmentID, ))
 
-    def getConnectedAttachments(self, partID):
-        return runQuery(self.sqlGetConnectedTags, (partID, ))
+    def getConnectedAttachments(self, psID):
+        return runQuery(self.sqlGetConnectedTags, (psID, ))
 #########################################################################################
 
 class PartHistoryHandler:

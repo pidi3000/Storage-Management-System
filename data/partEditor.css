@@ -18,8 +18,8 @@
     position: absolute;
 
     --edit-Menu-Control-Bar-Size: 20px;
-    --edit-Menu-Border-Size: 5px;
-    border                 : var(--edit-Menu-Border-Size) solid var(--bg-color-brighter);
+    --edit-Menu-Border-Size     : 5px;
+    border                      : var(--edit-Menu-Border-Size) solid var(--bg-color-brighter);
 
 
     --edit-Menu-Width : calc(80% - var(--edit-Menu-Border-Size) * 2);
@@ -56,6 +56,15 @@
     background: var(--bg-color-brighter);
 }
 
+.part-Editor-Menu-Bottom-Control-Bar {
+
+    text-align     : right;
+    justify-content: right;
+
+    width : 100%;
+    height: var(--edit-Menu-Control-Bar-Size);
+}
+
 .part-Editor-Menu-Close-Button {
     position   : absolute;
     right      : 0px;
@@ -65,7 +74,45 @@
     width : var(--edit-Menu-Control-Bar-Size);
     height: var(--edit-Menu-Control-Bar-Size);
 
+    cursor: pointer;
+}
 
+.part-Editor-Menu-Button {
+    text-align : center;
+    line-height: 30px;
+
+    font-size    : 20px;
+    height       : 30px;
+    border-radius: 30px;
+
+    cursor: pointer;
+}
+.part-Editor-Menu-Button:hover {
+    opacity: 70%;
+}
+
+.part-Editor-Menu-Save-Button {
+    position: absolute;
+    right   : 0px;
+    width   : 80px;
+
+    background-color: var(--green1);
+}
+
+.part-Editor-Menu-Cancel-Button {
+    position: absolute;
+    right   : 90px;
+    width   : 80px;
+
+    background-color: var(--red);
+}
+
+.part-Editor-Menu-Delete-Button {
+    position: absolute;
+    left   : 0px;
+    width   : 80px;
+
+    background-color: var(--red);
 }
 
 .part-Editor-Menu-Close-Button:hover {
@@ -80,7 +127,7 @@
     padding: 5px;
 
     height: calc(100% - var(--edit-Menu-Control-Bar-Size));
-    width: 100%;
+    width : 100%;
 
 }
 
@@ -98,12 +145,19 @@
 
     max-width : 100%;
     max-height: 100%;
+
+
+    cursor: pointer;
 }
 
-.part-Editor-Name{
-    position       : absolute;
+.part-Editor-Image:hover {
+    opacity: 70%;
+}
 
-    top: 5px;
+.part-Editor-Name {
+    position: absolute;
+
+    top : 5px;
     left: 160px;
 
     width : calc(100% - 185px);
@@ -113,15 +167,15 @@
 
 }
 
-.part-Editor-Description{
-    position       : absolute;
+.part-Editor-Description {
+    position: absolute;
 
-    top: 35px;
+    top : 35px;
     left: 160px;
 
     width : calc(100% - 185px);
     height: 110px;
-    
+
     font-size: 14px;
-    resize: none;
+    resize   : none;
 }

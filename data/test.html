@@ -17,31 +17,7 @@
     <div class="pageContentBox">
         <div id="search-Menu" class="search-Menu-Box">
 
-            <div class="part-Filter-Box">
-                <div class="part-Filter-Title"><b>Filter</b></div>
 
-                <div class="part-Filter-Sub-Box part-Filter-Tag-Box">
-                    <div class="part-Filter-Sub-Title"><b>Tags</b></div>
-
-                    <input id="tagSearchInput" type="text" placeholder="Search tag" class="part-Filter-Input"
-                        oninput="searchTag(this.value)">
-
-                    <div id="part-Filter-Tags-List" class="part-Filter-List"> </div>
-                </div>
-
-                <div class="part-Filter-Sub-Box part-Filter-Location-Box">
-                    <div class="part-Filter-Sub-Title"><b>Location</b></div>
-
-                    <input id="locationSearchInput" type="text" placeholder="Search location" class="part-Filter-Input"
-                        oninput="searchLocation(this.value)">
-
-                    <div id="part-Filter-Locations-List" class="part-Filter-List"> </div>
-                </div>
-
-                <template id="part-Filter-Entry-Template">
-                    <div id="part-Filter-Entry" class="part-Filter-Entry"> </div>
-                </template>
-            </div>
 
             <div class="part-Search-Box">
                 <div class="part-Search-Title">
@@ -57,12 +33,39 @@
                 <input id="partSearchInput" type="text" placeholder="Search" class="part-Search-Input"
                     oninput="searchPart()">
 
-                <div id="search-Result-List" class="search-Result-List"> </div>
+
+                <div class="part-Filter-Box">
+                    <div class="part-Filter-Title"><b>Filters</b></div>
+
+                    <div class="part-Filter-Sub-Box">
+                        <div class="part-Filter-Sub-Title"><b>Tags</b></div>
+
+                        <input id="tagSearchInput" type="text" placeholder="Search tag" class="part-Filter-Input"
+                            oninput="searchTag(this.value)">
+
+                        <div id="part-Filter-Tags-List" class="part-Filter-List"> </div>
+                    </div>
+
+                    <div class="part-Filter-Sub-Box part-Filter-Location-Box">
+                        <div class="part-Filter-Sub-Title"><b>Location</b></div>
+
+                        <input id="locationSearchInput" type="text" placeholder="Search location"
+                            class="part-Filter-Input" oninput="searchLocation(this.value)">
+
+                        <div id="part-Filter-Locations-List" class="part-Filter-List"> </div>
+                    </div>
+
+                    <template id="part-Filter-Entry-Template">
+                        <div id="part-Filter-Entry" class="part-Filter-Entry"> </div>
+                    </template>
+                </div>
+
+                <div id="search-Result-List" class="search-Result-List"></div>
                 <template id="search-Result-Part-Template">
                     <div id="part-ID" class="search-Result-Part-Box" onclick="showPartInfo(this)">
                         <div>
-                            <img id="search-Result-Part-Image" class="search-Result-Part-Image"
-                                src="attachment/default-image-620x600.jpg" alt="part image">
+                            <img id="search-Result-Part-Image" class="search-Result-Part-Image" alt="Not Found"
+                                onerror=this.src="attachment/default-image-620x600.jpg">
                         </div>
 
                         <div class="search-Result-Part-Data-Box">
@@ -77,13 +80,18 @@
 
             </div>
 
-            <div class="part-Info-Box">
+            <div id="part-Info-Box" class="part-Info-Box" data-PartID="">
                 <div>
-                    <img id="part-Info-Image" class="part-Info-Image" src="attachment" alt="part image">
+                    <img id="part-Info-Image" class="part-Info-Image" src="" alt="Not Found"
+                        onerror=this.src="attachment/default-image-620x600.jpg">
                 </div>
 
                 <div class="part-Info-Name-Box">
                     <b id="part-Info-Name"></b>
+
+                    <div id="add-Part-Button" class="add-Part-Button" onclick="openEditPartMenu()">
+                        Edit part
+                    </div>
                 </div>
 
                 <div id="part-Info-Location-List" class="part-Info-Sub-Box part-Info-Location-Box"> </div>
@@ -104,20 +112,29 @@
             </div>
         </div>
 
-<!-- ################################################################################################################################## -->
+        <!-- ################################################################################################################################## -->
         <div id="part-Editor-Menu" class="part-Editor-Menu">
-            <div id="part-Editor-Menu-Box" class="part-Editor-Menu-Box">
+            <div id="part-Editor-Menu-Box" class="part-Editor-Menu-Box" data-Editor-Mode="" data-PartID="">
                 <div class="part-Editor-Menu-Control-Bar">
-                    <div class="part-Editor-Menu-Close-Button" onclick="canlceEditMenu()">
-                        X
-                    </div>
+                    <div class="part-Editor-Menu-Close-Button" onclick="cancelEdit()">X</div>
                 </div>
 
                 <div id="part-Editor-Content-Box" class="part-Editor-Content-Box">
-                    <img id="part-Editor-Image" class="part-Editor-Image" src="attachment/default-image-620x600.jpg" alt="part image">
+                    <img id="part-Editor-Image" class="part-Editor-Image" src="attachment/default-image-620x600.jpg"
+                        alt="part image" onclick="uploadPartImage(this)">
 
                     <input type="text" name="part-Name" id="part-Editor-Name" class="part-Editor-Name">
-                    <textarea  name="part-Description" id="part-Editor-Description" rows="7" class="part-Editor-Description"></textarea>
+                    <textarea name="part-Description" id="part-Editor-Description" rows="7"
+                        class="part-Editor-Description"></textarea>
+                </div>
+
+                <div class="part-Editor-Menu-Bottom-Control-Bar">
+                    <div id="part-Editor-Delete-Button" class="part-Editor-Menu-Button part-Editor-Menu-Delete-Button"
+                        onclick="deletePart()">Delete</div>
+
+                    <div class="part-Editor-Menu-Button part-Editor-Menu-Cancel-Button" onclick="cancelEdit()">Cancel
+                    </div>
+                    <div class="part-Editor-Menu-Button part-Editor-Menu-Save-Button" onclick="saveEdit()">Save</div>
                 </div>
             </div>
         </div>
@@ -137,8 +154,8 @@
     }
 </script>
 
+<!--  Search menu script -->
 <script>
-    // Search menu script
 
     //On first page load search with empty search string to display all parts, tags and loactions
     searchPart("");
@@ -253,6 +270,8 @@
     async function showPartInfo(partElement) {
         partID = partElement.id;
 
+        document.getElementById("part-Info-Box").setAttribute("data-PartID", partID)
+
         // Highlight previewed part
         oldPreviewPart = document.querySelector(".part-Preview-Selected");
         if (oldPreviewPart) {
@@ -357,21 +376,9 @@
     }
 </script>
 
+<!--  Part editor script -->
 <script>
     partEditorWindow = document.getElementById("part-Editor-Menu");
-
-    function openPartEditor(mode, partID = -1) {
-        console.log("test")
-        //partEditorWindow.classList.add("zoom-in-out-box")
-        partEditorWindow.style.display = "block";
-
-        if (mode == "add") {
-
-        } else if (mode == "edit") {
-
-        }
-
-    }
 
     function openAddPartMenu() {
         //filepath = eel.ask_file()()
@@ -379,19 +386,121 @@
         openPartEditor("add");
     }
 
+    function openEditPartMenu() {
+        partID = document.getElementById("part-Info-Box").getAttribute("data-PartID")
+        openPartEditor("edit", partID);
+    }
+
+    async function openPartEditor(mode, partID = -1) {
+        //partEditorWindow.classList.add("zoom-in-out-box")
+
+
+        if (mode == "add") {
+            document.getElementById("part-Editor-Delete-Button").style.display = "none";
+            document.getElementById("part-Editor-Menu-Box").setAttribute("data-Editor-Mode", "add");
+            document.getElementById("part-Editor-Menu-Box").setAttribute("data-PartID", "");
+
+            document.getElementById("part-Editor-Image").src = "attachment/default-image-620x600.jpg";
+
+            document.getElementById("part-Editor-Name").value = "";
+            document.getElementById("part-Editor-Description").value = "";
+        } else if (mode == "edit") {
+            if (partID < 0 || partID == "") return
+
+            document.getElementById("part-Editor-Delete-Button").style.display = "block";
+            document.getElementById("part-Editor-Menu-Box").setAttribute("data-Editor-Mode", "edit");
+            document.getElementById("part-Editor-Menu-Box").setAttribute("data-PartID", partID);
+
+            // Get part data from DB
+            var partData = JSON.parse(await eel.getPartData(partID)());
+
+            if (partData == "none") {
+                console.log("invalid part ID")
+                return;
+            }
+
+
+            document.getElementById("part-Editor-Image").src = partData["Image"];
+
+            document.getElementById("part-Editor-Name").value = partData["Name"];
+            document.getElementById("part-Editor-Description").value = partData["Description"];
+
+        }
+
+        partEditorWindow.style.display = "block";
+    }
+
     function closeEditMenu() {
         partEditorWindow.style.display = "none";
     }
 
-    function canlceEditMenu() {
+    async function saveEdit() {
+        edit_Mode = document.getElementById("part-Editor-Menu-Box").getAttribute("data-Editor-Mode");
+
+
+        part_Data = {
+            "part_ImageWebPath": document.getElementById("part-Editor-Image").getAttribute('src'),
+            "part_Name": document.getElementById("part-Editor-Name").value,
+            "part_Description": document.getElementById("part-Editor-Description").value
+        };
+
+
+        partID = document.getElementById("part-Editor-Menu-Box").getAttribute("data-PartID");
+        json_Part_Data = JSON.stringify(part_Data)
+
+        if (edit_Mode == "add") {
+            temp = await eel.addNewPart(json_Part_Data)();
+
+        } else if (edit_Mode == "edit") {
+            temp = await eel.editPart(partID, json_Part_Data)();
+        }
+
+        // Reload part info
+        closeEditMenu();
+        searchPart();
+
+        setTimeout(function () {
+            document.getElementById("search-Result-List").querySelector("#" + CSS.escape(partID)).click()
+        }, 100);
+
+    }
+
+    function cancelEdit() {
         // TODO show warnning popup
 
         closeEditMenu();
     }
 
+    async function deletePart() {
+        partID = document.getElementById("part-Info-Box").getAttribute("data-PartID");
+        success = await eel.deletePart(partID)();
+
+
+
+        if (document.getElementById("search-Result-List").hasChildNodes()) {
+            setTimeout(function () {
+                document.getElementById("search-Result-List").children[0].click();
+            }, 100);
+        }
+        closeEditMenu();
+        searchPart();
+    }
+
     function editQuantity(partInStorage_ID) {
         alert("Edit quantity, ID: " + partInStorage_ID);
 
+    }
+
+
+
+
+    // Upload files
+
+    async function uploadPartImage(editorImageObj) {
+        filepath = await eel.ask_file()()
+
+        console.log(filepath);
+        editorImageObj.src = filepath;
     }
 </script>
 
